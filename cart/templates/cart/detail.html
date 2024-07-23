@@ -1,0 +1,59 @@
+{% extends "shop/base.html" %}
+{% load static %}
+
+{% block title %}
+  የእርሶ ትዕዛዞች ዝርዝር መረጃ
+{% endblock %}
+
+{% block content %}
+  <h1>የእርሶ ትዕዛዞች ዝርዝር መረጃ</h1>
+  <table class="cart">
+    <thead>
+      <tr>
+             
+        <th>ምስል</th>
+        <th>ምርት</th>
+        <th>ብዛት</th>
+        <th>ሰርዝ</th>
+        <th>የአንዱ ዋጋ</th>
+        <th>ጠቅላላ ዋጋ</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in cart %}
+        {% with product=item.product %}
+          <tr>
+            <td>
+              <a href="{{ product.get_absolute_url }}">
+                <img src="{% if product.image %}{{ product.image.url }}{% else %}{% static "img/no_image.png" %}{% endif %}">
+              </a>
+            </td>
+            <td>{{ product.name }}</td>
+            <td>
+              <form action="{% url "cart:cart_add" product.id %}" method="post">
+                {{ item.update_quantity_form.quantity }}
+                {{ item.update_quantity_form.update }}
+                <input type="submit" value="አስተካክል">
+                {% csrf_token %}
+              </form>
+            </td>
+            <td><a href="{% url "cart:cart_remove" product.id %}">ሰርዝ</a></td>
+            <td class="num">{{ item.price }} ብር</td>
+            <td class="num">{{ item.total_price }} ብር</td>
+          </tr>
+        {% endwith %}
+      {% endfor %}
+      <tr class="total">
+        <td>ጠቅላላ</td>
+        <td colspan="4"></td>
+        <td class="num">{{ cart.get_total_price }} ብር</td>
+      </tr>
+    </tbody>
+  </table>
+  <p class="text-right">
+    <a href="{% url "shop:product_list" %}" class="button light">ግብይቶን ይቀጥሉ</a>
+    <a href="{% url "orders:order_create" %}" class="button">
+      ትዕዛዞትን ይላኩ
+    </a>
+  </p>
+{% endblock %}

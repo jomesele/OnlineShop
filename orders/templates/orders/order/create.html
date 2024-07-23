@@ -1,0 +1,28 @@
+{% extends "shop/base.html" %}
+
+{% block title %}
+  ትዕዛዝ መላኪያ ቅፅ
+{% endblock %}
+
+{% block content %}
+  <h1>ትዕዛዝ መላኪያ ቅፅ</h1>
+
+  <div class="order-info">
+    <h3>የእርሶ ትዕዛዞች</h3>
+    <ul>
+      {% for item in cart %}
+        <li>
+          {{ item.quantity }}x {{ item.product.name }}
+          <span>{{ item.total_price }} ብር</span>
+        </li>
+      {% endfor %}
+    </ul>
+    <p>ጠቅላላ : {{ cart.get_total_price }} ብር</p>
+  </div>
+
+  <form action="." method="post" class="order-form">
+    {{ form.as_p }}
+    <p><input type="submit" value="ትዕዛዝ አስተላልፍ"></p>
+    {% csrf_token %}
+  </form>
+{% endblock %}
